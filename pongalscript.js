@@ -1,9 +1,15 @@
+let audioUnlocked = false;
+
 document.body.addEventListener("click", () => {
-    const sound = document.getElementById("pongalSound");
-    if (sound && sound.paused) {
-        sound.play().catch(() => {});
+    if (!audioUnlocked) {
+        const sound = document.getElementById("pongalSound");
+        sound.play().then(() => {
+            sound.pause();
+            sound.currentTime = 0;
+            audioUnlocked = true;
+        }).catch(() => {});
     }
-}, { once: true });
+});
 
 
 
@@ -135,4 +141,5 @@ const timer = setInterval(() => {
 
     }
 }, 1000);
+
 
