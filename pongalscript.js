@@ -1,3 +1,13 @@
+document.body.addEventListener("click", () => {
+    const sound = document.getElementById("pongalSound");
+    if (sound && sound.paused) {
+        sound.play().catch(() => {});
+    }
+}, { once: true });
+
+
+
+
 /* ===== ELEMENTS ===== */
 const countdownEl = document.getElementById("countdown");
 const canvas = document.getElementById("petalCanvas");
@@ -125,3 +135,4 @@ const timer = setInterval(() => {
 
     }
 }, 1000);
+
