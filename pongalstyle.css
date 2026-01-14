@@ -1,0 +1,88 @@
+/* ===== BASE ===== */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+    background: #000;
+    overflow: hidden;
+    font-family: "Segoe UI", Arial, sans-serif;
+    transition: background 1.5s ease-in-out;
+}
+
+/* ===== COUNTDOWN ===== */
+#countdown {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 6rem;
+    font-weight: 600;
+    color: #00e5ff;
+    letter-spacing: 4px;
+    text-shadow: 0 0 20px rgba(0, 229, 255, 0.7);
+    animation: pulse 1s infinite;
+    z-index: 5;
+}
+
+@keyframes pulse {
+    0% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -50%) scale(1.1); }
+    100% { transform: translate(-50%, -50%) scale(1); }
+}
+
+/* ===== FESTIVE BACKGROUND ===== */
+.festive-bg {
+    background: url("pongal.png") no-repeat center center / cover;
+}
+
+/* ===== CANVAS ===== */
+#petalCanvas {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* ===== GREETINGS ===== */
+#englishText,
+#tamilText {
+    position: absolute;
+    bottom: 18%;
+    width: 100%;
+    text-align: center;
+    font-size: 3rem;
+    color: #fff6c8;
+    opacity: 0;
+    z-index: 4;
+}
+
+.show {
+    animation: fadeIn 1.8s ease forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===== MOBILE OPTIMIZATION ===== */
+@media (max-width: 768px) {
+    #countdown {
+        font-size: 4rem;
+    }
+
+    #englishText,
+    #tamilText {
+        font-size: 2rem;
+        padding: 0 16px;
+    }
+}
