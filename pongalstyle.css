@@ -86,3 +86,35 @@ body {
         padding: 0 16px;
     }
 }
+/* ===== TAP TO START OVERLAY ===== */
+#startOverlay {
+    position: fixed;
+    inset: 0;
+    background: #000;
+    color: #00e5ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    z-index: 20;
+    cursor: pointer;
+    text-align: center;
+}
+
+/* ===== HIDE ANIMATION (FOR ENGLISH TEXT) ===== */
+.hide {
+    animation: fadeOut 1.2s ease forwards;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+}
+
+
