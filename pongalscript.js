@@ -1,28 +1,17 @@
-let audioUnlocked = false;
-
-document.body.addEventListener("click", () => {
-    if (!audioUnlocked) {
-        const sound = document.getElementById("pongalSound");
-        sound.play().then(() => {
-            sound.pause();
-            sound.currentTime = 0;
-            audioUnlocked = true;
-        }).catch(() => {});
-    }
-});
-
-
-
-
-/* ===== ELEMENTS ===== */
+/* =====================================================
+   ELEMENT REFERENCES
+===================================================== */
 const countdownEl = document.getElementById("countdown");
 const canvas = document.getElementById("petalCanvas");
 const ctx = canvas.getContext("2d");
 const englishText = document.getElementById("englishText");
 const tamilText = document.getElementById("tamilText");
 const sound = document.getElementById("pongalSound");
+const startOverlay = document.getElementById("startOverlay");
 
-/* ===== CANVAS SIZE ===== */
+/* =====================================================
+   CANVAS SETUP
+===================================================== */
 function resizeCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
@@ -30,12 +19,16 @@ function resizeCanvas() {
 resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
 
-/* ===== DEVICE ADAPTATION ===== */
+/* =====================================================
+   PERFORMANCE SETTINGS
+===================================================== */
 const isMobile = window.innerWidth < 768;
-const MAX_PETALS = isMobile ? 60 : 120;
-let petalRate = isMobile ? 3 : 6;
+const MAX_PETALS = isMobile ? 40 : 100;
+let petalRate = isMobile ? 2 : 5;
 
-/* ===== PETAL SYSTEM ===== */
+/* =====================================================
+   PETAL SYSTEM (CANVAS – HIGH PERFORMANCE)
+===================================================== */
 let petals = [];
 let animationId;
 
@@ -66,7 +59,7 @@ class Petal {
         ctx.save();
         ctx.translate(this.x, this.y);
         ctx.rotate(this.angle);
-        ctx.fillStyle = "#f5c542"; // gold
+        ctx.fillStyle = "#f5c542"; // gold color
         ctx.beginPath();
         ctx.ellipse(0, 0, this.size, this.size * 0.6, 0, 0, Math.PI * 2);
         ctx.fill();
@@ -83,15 +76,17 @@ function addPetals() {
 function animatePetals() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    petals.forEach(p => {
-        p.update();
-        p.draw();
+    petals.forEach(petal => {
+        petal.update();
+        petal.draw();
     });
 
     animationId = requestAnimationFrame(animatePetals);
 }
 
-/* ===== PAUSE WHEN TAB HIDDEN ===== */
+/* =====================================================
+   PAUSE WHEN TAB IS HIDDEN
+===================================================== */
 document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
         cancelAnimationFrame(animationId);
@@ -100,46 +95,66 @@ document.addEventListener("visibilitychange", () => {
     }
 });
 
-/* ===== COUNTDOWN LOGIC ===== */
-let count = 3;
+/* =====================================================
+   START EXPERIENCE (USER GESTURE REQUIRED)
+===================================================== */
+startOverlay.addEventListener("click", () => {
+    // Unlock audio
+    sound.play().then(() => {
+        sound.pause();
+        sound.currentTime = 0;
+    }).catch(() => {});
 
-const timer = setInterval(() => {
-    count--;
+    // Remove overlay
+    startOverlay.remove();
 
-    if (count > 0) {
-        countdownEl.textContent = count;
-    } else {
-        clearInterval(timer);
-        countdownEl.remove();
+    // Start countdown
+    startCountdown();
+}, { once: true });
 
-        /* BACKGROUND SWITCH */
-        document.body.classList.add("festive-bg");
+/* =====================================================
+   COUNTDOWN + MAIN SEQUENCE
+===================================================== */
+function startCountdown() {
+    let count = 3;
+    countdownEl.textContent = count;
 
-        /* SOUND */
-        sound.play().catch(() => {});
+    const timer = setInterval(() => {
+        count--;
 
-        /* START PETALS */
-        addPetals();
-        animatePetals();
+        if (count > 0) {
+            countdownEl.textContent = count;
+        } else {
+            clearInterval(timer);
+            countdownEl.remove();
 
-        /* SLOW DOWN AFTER FEW SECONDS */
-        setTimeout(() => {
-            petalRate = 2;
-        }, 6000);
+            // Background change
+            document.body.classList.add("festive-bg");
 
-        /* GREETING SEQUENCE */
-        englishText.classList.add("show");
+            // Play sound (NOW ALLOWED)
+            sound.play().catch(() => {});
 
-        setTimeout(() => {
-            englishText.classList.remove("show");
-            englishText.classList.add("hide");
-        }, 2200);
+            // Start petals
+            addPetals();
+            animatePetals();
 
-        setTimeout(() => {
-            tamilText.classList.add("show");
-        }, 3000);
+            // Slow down petals after few seconds
+            setTimeout(() => {
+                petalRate = 1;
+            }, 6000);
 
-    }
-}, 1000);
+            // English greeting
+            englishText.classList.add("show");
 
+            // Hide English, show Tamil
+            setTimeout(() => {
+                englishText.classList.remove("show");
+                englishText.classList.add("hide");
+            }, 2200);
 
+            setTimeout(() => {
+                tamilText.classList.add("show");
+            }, 3000);
+        }
+    }, 1000);
+}
